@@ -1,0 +1,146 @@
+
+
+
+
+The situation is as follows: one cluster, in need of an upgrade
+
+Assets: We have extensive documentation, room to do backups
+Trouble: deeply customized environment
+
+
+Sophie has two head nodes (one is being used as a compute node, for some reason)
+
+
+3 chassis, 36 nodes. https://noc.chibi.ubc.ca/wiki/Sophie/Sophie/
+
+Plan:
+
+Step 0:) (this is done)
+
+The upgrade will blow away the root partition, but we have /etc/ and /opt backed up
+ rsync -ai /opt jenkins@craniata:/sophie/opt
+
+rsync -ai /etc jenkins@craniata:/sophie/etc
+
+rsync -ai /usr/local/etc jenkins@craniata:/sophie/
+
+
+ [root@sophie 14:10:39 build]# mount
+/dev/sda1 on / type ext3 (rw)
+proc on /proc type proc (rw)
+sysfs on /sys type sysfs (rw)
+devpts on /dev/pts type devpts (rw,gid=5,mode=620)
+/dev/sda5 on /state/partition1 type ext3 (rw)
+/dev/sda2 on /var type ext3 (rw)
+tmpfs on /dev/shm type tmpfs (rw)
+tmpfs on /var/lib/ganglia/rrds type tmpfs (rw,size=12362112000,gid=99,uid=99)
+
+So we'll lose /opt and /etc - so the  configs for automount, ldap integration, etc.
+
+
+none on /proc/sys/fs/binfmt_misc type binfmt_misc (rw)
+sunrpc on /var/lib/nfs/rpc_pipefs type rpc_pipefs (rw)
+nfsd on /proc/fs/nfsd type nfsd (rw)
+/dev/mapper/mpath1 on /state/partition1/home type ext3 (rw,grpquota,usrquota)
+/dev/mapper/mpath6 on /state/partition1/scratch type ext3 (rw,grpquota,usrquota)
+/dev/mapper/mpath5 on /state/partition1/slowscratch type ext3 (rw,grpquota,usrquota)
+/state/partition1/apps on /share/apps type none (rw,bind)
+
+/opt is only 5.3G
+
+Step 0.5) Find somewhere to park all of the data in /localscratch - I can rsync this to craniata. Unfortunately, this is led me to discover yet more data that needs to be moved off of sophie before we can safely rebuild- all of /share , some 302G in all)
+
+
+
+Step 1:) negotiate node shutdowns. (This will take a little while- important science being done! )
+
+Prepare nodes for upgrade(i.e. boot from pxe)
+
+# ssh-agent $SHELL
+# ssh-add
+# cluster-fork 'touch /boot/grub/pxe-install'
+# cluster-fork '/boot/kickstart/cluster-kickstart --start'
+# cluster-fork '/sbin/chkconfig --del rocks-grub'
+
+
+Stolen from:
+
+http://www.rocksclusters.org/rocks-documentation/4.1/upgrade-frontend.html
+
+Step 2. Upgrade headnode.
+
+Step 3. Install /etc/nsswitch.conf
+/etc/bacula
+/etc/nscd.conf- possibly- might need adaptation for centos6
+/etc/nrpe.d/
+/etc/my.cnf - maybe
+SSSD Configuration /etc/ssd/ssd.conf
+/etc/openldap
+/etc/pam.d/
+
+/etc/quotoatab
+/etc/quotagrpadmins
+
+/etc/passwd
+/etc/shadow
+/etc/gshadow
+/etc/group
+/etc/auto.home
+/etc/auto.master
+
+/etc/fstab
+/etc/exports
+
+Step 4:) Install applications
+
+We can package all the applications with checkinstall http://asic-linux.com.mx/~izto/checkinstall/
+ (this way we get clean uninstalling/reinstalling).
+
+My concern is that it writes to the rpm database if we make and install rpm packages.
+
+
+ I had checked out https://nixos.org/nix/ to use for this, but it'd be a bit more work. Maybe better long term, better for multiple versions of things, but a bit of work to get oriented to the "builder" format.
+
+
+
+
+List of requested applications:
+1) wordom
+2) CHARMM  (probably only 36 required- but we keep c35b5 and c35b2 available as tarballs, in case someone needs to have it installed in future, to reproduce a result.)
+3) AMBER
+4) Almost 2.1
+5) openmpi, qsub
+6) Dell specific management software.
+7) R
+8) python 2
+9) numpy
+10) matplotlib
+11) scipy
+12) pandas
+13) BLAST
+14) cmake
+15) biopython
+16) MDAnalysis
+17) NAMD
+18) ATLAS
+19) gcc version 4.4 (including c++ and fortran extensions)
+ysis
+20:) Espritz http://protein.bio.unipd.it/download/ (binary)
+
+5:) Test that all the applications are working as expected.
+
+6:) Get confirmation that all is working as expected.
+
+6a:) build restore roll/rocks
+
+7:) Install to nodes.
+
+8:) Either: Never do this again, or do it once a quarter so that we get good at it.
+
+8a:) Be able to do this three times a day.
+
+
+
+Logistical support: some uninterrupted time required.
+
+
