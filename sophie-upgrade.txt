@@ -105,11 +105,12 @@ My concern is that it writes to the rpm database if we make and install rpm pack
 
 
 List of requested applications:
-1) wordom
-2) CHARMM  (probably only 36 required- but we keep c35b5 and c35b2 available as tarballs, in case someone needs to have it installed in future, to reproduce a result.)
-3) AMBER
-4) Almost 2.1
-5) openmpi, qsub
+1) wordom http://sourceforge.net/projects/wordom/files/latest/download (awkward binary)
+2) CHARMM 39 - c39b1  (we keep c35b5 and c35b2 available as tarballs, in case someone needs to have it installed in future, to reproduce a result.)
+3) Amber14 (backed up to craniata)
+3a) AmberTools14 (Also to Craniata)
+4) Almost 2.1 
+5) openmpi, qsub (ships with rocks)
 6) Dell specific management software.
 7) R
 8) python 2
