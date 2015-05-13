@@ -48,7 +48,7 @@ nfsd on /proc/fs/nfsd type nfsd (rw)
 
 /opt is only 5.3G
 
-Step 0.5) Find somewhere to park all of the data in /localscratch - I can rsync this to craniata. Unfortunately, this is led me to discover yet more data that needs to be moved off of sophie before we can safely rebuild- all of /share , some 302G in all)
+Step 0.5:) Find somewhere to park all of the data in /localscratch - I can rsync this to craniata. Unfortunately, this is led me to discover yet more data that needs to be moved off of sophie before we can safely rebuild- all of /share , some 302G in all)
 
 
 
@@ -67,9 +67,9 @@ Stolen from:
 
 http://www.rocksclusters.org/rocks-documentation/4.1/upgrade-frontend.html
 
-Step 2. Upgrade headnode.
+Step 2:) Upgrade headnode.
 
-Step 3. Install /etc/nsswitch.conf
+Step 3:) Install /etc/nsswitch.conf
 /etc/bacula
 /etc/nscd.conf- possibly- might need adaptation for centos6
 /etc/nrpe.d/
@@ -115,19 +115,17 @@ List of requested applications:
 8) R (through yum)
 9) python 2 (though yum)
 10) matplotlib https://downloads.sourceforge.net/project/matplotlib/matplotlib/matplotlib-1.4.3/matplotlib-1.4.3.tar.gz
-11) scipy & numpy - get it through Anaconda? alternatively, through yum install numpy scipy python-matplotlib ipython python-pandas sympy python-nose
-
+11) scipy & numpy - get it through Anaconda http://continuum.io/downloads ? alternatively, through yum install numpy scipy python-matplotlib ipython python-pandas sympy python-nose
 12) pandas https://pypi.python.org/packages/source/p/pandas/pandas-0.16.1.tar.gz#md5=fac4f25748f9610a3e00e765474bdea8
 13) BLAST ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.2.30+-src.tar.gz
 14) cmake hopefully available through yum
 15) biopython - http://biopython.org/DIST/biopython-1.65.tar.gz
 16) MDAnalysis https://pypi.python.org/packages/source/M/MDAnalysis/MDAnalysis-0.9.2.tar.gz
 17) NAMD - 2.10 source tarball saved. Will place in locally accesible share.
-
 18) ATLAS http://sourceforge.net/projects/math-atlas/files/Stable/3.10.2/atlas3.10.2.tar.bz2/download
 19) gcc version 4.4 (including c++ and fortran extensions)
-20:) Espritz http://protein.bio.unipd.it/download/ (binary)
-21:) gcc, at least 4.6 for CHARMM
+20) Espritz http://protein.bio.unipd.it/download/ (binary)
+21) gcc, at least 4.6 for CHARMM
 
 5:) Test that all the applications are working as expected.
 
@@ -139,7 +137,7 @@ List of requested applications:
 
 8:) Either: Never do this again, or do it once a quarter so that we get good at it.
 
-8a:) Be able to do this three times a day.
+9:) Be able to do this three times a day.
 
 
 
